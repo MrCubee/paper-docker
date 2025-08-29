@@ -23,13 +23,10 @@ RUN set -eux; \
 
 FROM alpine
 ARG JAVA_MAJOR
-RUN apk add --no-cache "openjdk${JAVA_MAJOR}" && \
-    adduser -D -h /data -s /bin/sh mc && \
-    mkdir -p /usr/local/bin
+RUN apk add --no-cache "openjdk${JAVA_MAJOR}" && mkdir -p /usr/local/bin
 COPY --from=downloader /opt/paper /opt/paper
 COPY ./start.sh /usr/local/bin/start-paper
 RUN chmod ugo=rx /usr/local/bin/start-paper
-USER mc
 WORKDIR /data
 EXPOSE 25565/tcp
 EXPOSE 25565/udp
