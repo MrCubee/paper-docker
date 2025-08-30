@@ -42,18 +42,18 @@ fi
 choose_java() {
     version=$1
     mc_minor=$(printf '%s' $1 | cut -d . -f2)
+    mc_patch=$(printf '%s' $1 | cut -d . -f3)
     case "$mc_minor" in
         ''|*[!0-9]*) mc_minor=21 ;;
     esac
     if [ "$mc_minor" -le 16 ]; then
         printf '8'
-    elif [ "$mc_minor" -le 20 ]; then
+    elif [ "$mc_minor" -lt 20 ] || { ["$mc_minor" -eq 20 ] && [ "$mc_patch" -lt 5 ]; }; then
         printf '17'
-    elif [ "$mc_minor" -le 21 ]; then
+    else
         printf '21'
     fi
 }
-
 
 if ! command -v docker >/dev/null 2>&1; then
     printf '%s\n' 'Error: docker is not installed.'
