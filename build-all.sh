@@ -1,3 +1,4 @@
+
 #!/bin/sh
 
 set -eu
@@ -6,10 +7,7 @@ if [ "$#" -gt 0 ]; then
     versions="$*"
 else
     versions="
-1.8
-1.8.3
 1.8.8
-1.9.2
 1.9.4
 1.10.2
 1.11.2
@@ -64,7 +62,7 @@ for version in $versions; do
     tag="docker.mrcubee.net/paper-$version"
     printf '==> Build %s (Java %s)\n' "$tag" "$java"
     docker build \
-        --build-arg SPIGOT_VERSION="$version" \
+        --build-arg PAPER_VERSION="$version" \
         --build-arg JAVA_MAJOR="$java" \
         -t "$tag" .
     printf '==> Push %s\n' "$tag"
