@@ -1,4 +1,3 @@
-
 #!/bin/sh
 
 set -eu
@@ -34,23 +33,38 @@ else
 1.21.4
 1.21.5
 1.21.8
+1.21.9
+1.21.10
+1.21.11
 "
 fi
 
 choose_java() {
     version=$1
+    mc_major=$(printf '%s' $1 | cut -d . -f1)
     mc_minor=$(printf '%s' $1 | cut -d . -f2)
     mc_patch=$(printf '%s' $1 | cut -d . -f3)
-    case "$mc_minor" in
-        ''|*[!0-9]*) mc_minor=21 ;;
-    esac
-    if [ "$mc_minor" -le 16 ]; then
-        printf '8'
-    elif [ "$mc_minor" -lt 20 ] || { ["$mc_minor" -eq 20 ] && [ "$mc_patch" -lt 5 ]; }; then
-        printf '17'
-    else
-        printf '21'
+
+    mc_major=${mc_major:-0}
+    mc_minor=${mc_minor:-0}
+    mc_patch=${mc_patch:-0}
+
+    if [ "$mc_major" -ge 26 ]; then
+        printf '25'
+        return
     fi
+
+    if [ "$mc_major" -eq 1 ] && { [ "$mc_minor" -ge 21 ] || { [ "$mc_minor" -eq 20 ] && [ "$mc_patch" -ge 5 ]; }; }; then
+        printf '21'
+        return
+    fi
+
+    if [ "$mc_major" -eq 1 ] && [ "$mc_minor" -ge 17 ]; then
+        printf '17'
+        return
+    fi
+
+    printf '8'
 }
 
 if ! command -v docker >/dev/null 2>&1; then
